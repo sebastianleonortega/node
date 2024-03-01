@@ -1,11 +1,13 @@
 import bodyParser from "body-parser";
 import express from "express";
+import {env} from "./default.js";
+import router from "../routes/index.routes.js";
 
 export default class Server{
 
     constructor(){
-        this.app = express;
-        this.port = 8000;
+        this.app = express();
+        this.port = env.port;
     }
 
     connectionDB(){}
@@ -20,7 +22,7 @@ export default class Server{
     }
 
     route(){
-       
+       this.app.use(router)
     }
 
     runServer(){
