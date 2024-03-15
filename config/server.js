@@ -3,6 +3,7 @@ import express from "express";
 import {env} from "./default.js";
 import router from "../routes/index.routes.js";
 import psService from "../services/pg.service.js";
+import middle from "../middlewares/index.middlewares.js";
 
 export default class Server{
 
@@ -23,6 +24,7 @@ export default class Server{
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
+        this.app.use(middle);
     }
 
     route(){
