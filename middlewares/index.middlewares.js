@@ -3,6 +3,6 @@ import { verifyToken } from "./token.middleware.js";
 
 const middle = Router();
 
-middle.use('/producto', verifyToken);
+middle.use('/product', verifyToken);
 
 export default middle;

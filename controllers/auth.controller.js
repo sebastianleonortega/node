@@ -1,30 +1,36 @@
-import { getUsuario } from "../models/auth.model.js"
+import { getUsuario, registerModel } from "../models/auth.model.js"
 import { generateToken } from "../services/token.service.js";
 
 export const login = async (req, res)=> {
     try {
-        const {username, password}= req.query;
-        let dta = await getUsuario(username, password);
+        
+        const {username, password}= req.body;
+        let data = await getUsuario(username, password);
 
         if (!data) {
-            throw new error("Credenciales incorrectas");
+            throw new Error("Credenciales incorrectas");
         }
 
         let token = generateToken(data);
         res.status(200).json({
+            msg : 'Bienvenido',
             token : token,
-            success: true,
-            msg : 'Bienvenido'
         });
+        
     } catch (error) {
-        console.log(error);
 
         res.status(401).json({
+            msg : 'Credenciales incorrectos',
             token : '',
-            success: false,
-            msg : 'datos incorrectos'
         });
     }
+}
+
+export const register = async (req, res)=> {
+    let {username, password } = req.body;
+
+    let data = await registerModel(username, password )
+    res.status(data.status).json(data.data);
 }
 
 
@@ -32,10 +38,10 @@ export const login = async (req, res)=> {
 //     ID SERIAL,
 //     USERNAME VARCHAR(200),
 //     PASSWORD VARCHAR(200),
-//     CONSTRAINT PK_USUARIO PRYMARY KEY (ID, USERNAME)
+//     CONSTRAINT PK_USUARIO PRIMARY KEY (ID, USERNAME)
 //     )
     
-//     INSERT INTO usuario (USENAME, PASSWORD)
+//     INSERT INTO usuario (USERNAME, PASSWORD)
 //     VALUES ('sebastian', '1234')
     
 //     select * from usuario

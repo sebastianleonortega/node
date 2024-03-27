@@ -1,8 +1,10 @@
 import { Router } from "express";
-import routeProducto from "./producto.routes.js";
+import routerProduct from "./producto.routes.js";
+import routerAuth from "./auth.routes.js";
 
 const router = Router();
 
-router.use('/producto', routeProducto)
+router.use('/product', routerProduct)
+router.use('/auth', routerAuth)
 
 export default router;

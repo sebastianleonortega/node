@@ -1,12 +1,12 @@
-import { getProductoModel, getProductoUnicoModel, postProductModel } from "../models/producto.model.js";
+import {getProductoModel, getProductoUnicoModel, postProductModel, putProductModel} from "../models/producto.model.js";
 
 
-export const getProducto = async (req, res)=> {
+export const getProduct = async (req, res)=> {
     let msg = await getProductoModel()
     res.status(200).json({succes: true, msg : msg});
 }
 
-export const getProductoUnico = async (req, res) =>  {
+export const getProductById = async (req, res) =>  {
     try {
         let {id} = req.params;
         let data = await getProductoUnicoModel(id)
@@ -18,10 +18,17 @@ export const getProductoUnico = async (req, res) =>  {
 }
 
 export const postProduct = async (req, res)=> {
-    let {nombre, detalle } = req.body;
+    let {nombre, detalle, valor, img  } = req.body;
 
-    let data = await postProductModel(nombre, detalle )
+    let data = await postProductModel(nombre, detalle, valor, img )
     res.status(200).json({succes: true, data : data});
+}
+
+ export const putProduct = async (req, res) => {
+    let {idProduct} = req.params;
+    let dataRequest = req.body;
+    let data = await putProductModel(dataRequest, idProduct)
+    res.status(data.status).json(data.data);
 }
 
 
@@ -35,7 +42,7 @@ export const postProduct = async (req, res)=> {
 //     );
 
 
-// INSERT INTO PRODUCTO (detalle, nombre)
-// values ('descripcion', 'zapato3')
+// INSERT INTO PRODUCTO (detalle, nombre, valor, img)
+// values ('descripcion', 'zapato nike', 4000, 'img')
 
 // select * from producto

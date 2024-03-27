@@ -15,7 +15,7 @@ export default class pgService{
         const pgp = pgPromise({});
         this.connection = pgp(env.postgres)
         this.connection.connect().then(obj => {
-            console.log("db conectada en la version: " + obj.client.serverVersion);
+            // console.log("db conectada en la version: " + obj.client.serverVersion);
             obj.done()
         })
         .catch(error => {

@@ -1,4 +1,3 @@
-import bodyParser from "body-parser";
 import express from "express";
 import {env} from "./default.js";
 import router from "../routes/index.routes.js";
@@ -13,15 +12,10 @@ export default class Server{
     }
 
     connectionDB(){
-
         new psService();
     }
 
-
     middlewards(){
-        // this.app.use(bodyParser.json());
-        // this.app.use(bodyParser.urlencoded({extended: true}));
-
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
         this.app.use(middle);
@@ -33,7 +27,6 @@ export default class Server{
 
     runServer(){
         this.app.listen(this.port, ()=>{
-            console.log("buenos dias");
         })
     }
 

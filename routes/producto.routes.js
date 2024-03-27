@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { getProducto, getProductoUnico, postProduct } from "../controllers/producto.controller.js";
+import {getProduct, getProductById, postProduct} from "../controllers/producto.controller.js";
 import { validate } from "../middlewares/validator.middleware.js";
 import { postProductValidator } from "../validators/producto.validator.js";
 
-const routeProducto = Router();
+const routerProduct = Router();
 
-routeProducto.get("/", getProducto );
-routeProducto.get("/:id", getProductoUnico );
-routeProducto.post("/",validate(postProductValidator), postProduct );
+routerProduct.get("/", getProduct );
+routerProduct.get("/:id", getProductById );
+routerProduct.post("/",validate(postProductValidator), postProduct );
 
-export default routeProducto;
+export default routerProduct;

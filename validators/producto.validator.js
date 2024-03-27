@@ -1,22 +1,19 @@
-import { checkSchema } from "express-validator";
+import {checkSchema} from "express-validator";
 
 
 export const postProductValidator = checkSchema({
-nombre : {
-    errorMessage: 'nombre no valido',
-    notEmpty: true,
-    isLength: {
-        options: {min:5},
-        errorMessage: 'el nomre dee ser minimo de 5 letras'
+    nombre: {
+        errorMessage: 'Nombre no valido',
+        notEmpty: true,
+        isLength: {
+            options: {min: 3},
+            errorMessage: 'El nombre debe tener minimo 3 letras'
+        }
+
+    },
+    detalle: {},
+    valor: {
+        matches: {options: /^[0-9]+$/},
+        errorMessage: 'Valor no valido'
     }
-
-},
-detalle : {
-
-},
-valor : {
-    matches: {options: /^[0-9]+$/},
-    errorMessage: 'El valor es solo numero'
-
-}
 }, ["body"])
