@@ -32,16 +32,3 @@ export const register = async (req, res)=> {
     let data = await registerModel(username, password )
     res.status(data.status).json(data.data);
 }
-
-
-// CREATE TABLE USUARIO (
-//     ID SERIAL,
-//     USERNAME VARCHAR(200),
-//     PASSWORD VARCHAR(200),
-//     CONSTRAINT PK_USUARIO PRIMARY KEY (ID, USERNAME)
-//     )
-    
-//     INSERT INTO usuario (USERNAME, PASSWORD)
-//     VALUES ('sebastian', '1234')
-    
-//     select * from usuario

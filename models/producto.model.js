@@ -1,58 +1,92 @@
-import { postProduct } from "../controllers/producto.controller.js";
+
 import pgService from "../services/pg.service.js";
 
+const pg = new pgService();
+
 export const getProductoModel = async () => {
-    const pg = new pgService();
-        return await pg.connection.query("SELECT * FROM PRODUCTO")
+
+    const product = await pg.connection.query("SELECT * FROM PRODUCTO");
+
+    if (!product){
+        return {data: "No hay ningun producto", status: 404}
+    }
+
+    return {data: product, status: 200}
 }
 
 export async function  getProductoUnicoModel (id) {
     try {
-        const pg = new pgService();
-        return await pg.connection.oneOrNone(`SELECT * FROM PRODUCTO WHERE ID_PRODUCTO = $1`, [id]);
+        const product = await pg.connection.oneOrNone(`SELECT * FROM PRODUCTO WHERE ID_PRODUCTO = $1`, [id]);
+
+        if(!product) {
+            return { data: "Producto no encontrado", status: 404}
+        }
+
+        return { data : product, status: 200}
     } catch (error) {
-        return 'No hay datos';
+        return {data: 'tenemos problemas, reintenta más tarde', status: 500};
     }
    
 }
 
-export const postProductModel = async ( nombre, detalle, valor, img) => {
+export const postProductModel = async ( dataRequest) => {
     try {
-        const pg = new pgService();
-        return await pg.connection.oneOrNone(`INSERT INTO PRODUCTO (nombre, detalle, valor, img) VALUES ($1, $2, $3, $4) RETURNING *`, [nombre, detalle, valor, img]);
+
+        const producExists = await pg.connection.oneOrNone(`SELECT * FROM PRODUCTO WHERE nombre = $1`, [dataRequest.nombre])
+
+        if(producExists){
+            return {data: 'Ya existe un producto con este nombre', status: 400}
+        }
+
+         const productResponse = await pg.connection.oneOrNone(`INSERT INTO PRODUCTO (nombre, detalle, valor, img) VALUES ($1, $2, $3, $4) RETURNING *`, [dataRequest.nombre, dataRequest.detalle, dataRequest.valor, dataRequest.img]);
+
+        return {data: productResponse, status: 201}
+
     } catch (error) {
-        return 'No hay datos';
+        return {data: 'tenemos problemas, reintenta más tarde', status: 500};
     }
    
 }
 
-export const putProductModel = async (dataRequest, product_id) => {
-    // try {
-    //     const pg = new pgService()
-    //
-    //     const productExists = await pg.connection.oneOrNone(`SELECT * FROM PRODUCT WHERE PRODUCT_ID = $1`, [product_id]);
-    //
-    //     if (!productExists){
-    //         return {data: 'El producto que intentas actualizar no existe :(', status: 404}
-    //     }
-    //
-    //     const productNameExists = await pg.connection.oneOrNone(`SELECT * FROM PRODUCT WHERE PRODUCT_NAME = $1`, [dataRequest.product_name]);
-    //
-    //     if (productNameExists[0] && productNameExists[0].product_id !== product_id){
-    //         return {data: 'Ya existe un producto con ese nombre :(', status: 400}
-    //     }
-    //
-    //     await pg.connection.query(
-    //         `UPDATE PRODUCT
-    //         SET PRODUCT_NAME = $1,
-    //         PRODUCT_DETAIL = $2,
-    //         PRODUCT_PRICE = $3
-    //         WHERE PRODUCT_ID = $4`,
-    //         [dataRequest.product_name, dataRequest.product_detail, dataRequest.product_price, product_id])
-    //
-    //     return {data: 'Producto actualizado con éxito', status: 200}
-    //
-    // } catch (error) {
-    //     return {data: 'Ups, ha habido un problema, reintenta más tarde', status: 500}
-    // }
+export const putProductModel = async (dataRequest, id) => {
+    try {
+        const productExists = await pg.connection.oneOrNone(`SELECT * FROM PRODUCTO WHERE id_producto = $1`, [id]);
+        if (!productExists){
+            return {data: 'El producto que intentas actualizar no existe!', status: 404}
+        }
+
+        const productNameExists = await pg.connection.query(`SELECT * FROM PRODUCTO WHERE nombre = $1`, [dataRequest.nombre]);
+        if (productNameExists[0] && productNameExists[0].id_producto != id){
+            return {data: 'Ya existe un producto con ese nombre!', status: 400}
+        }
+
+        await pg.connection.query(
+            `UPDATE PRODUCTO 
+            SET nombre = $1, 
+            detalle = $2, 
+            valor = $3 
+            WHERE id_producto = $4`,
+            [dataRequest.nombre, dataRequest.detalle, dataRequest.valor, id])
+
+        return {data: 'Producto actualizado con éxito', status: 200}
+
+    } catch (error) {
+        return {data: 'tenemos problemas, reintenta más tarde', status: 500}
+    }
+}
+
+export const deleteProductById =  async(id) =>{
+    try {
+        const existsProduct =  await pg.connection.oneOrNone(`SELECT * FROM PRODUCTO WHERE id_producto = $1`, [id])
+        if(!existsProduct){
+            return {data: 'El producto que intenta eliminar no existe!', status: 404}
+        }
+
+        await pg.connection.query(`DELETE FROM PRODUCTO WHERE id_producto= $1`,[id]);
+        return {data:"Producto eliminado exitosamente", status:200};
+
+
+    } catch (error) {
+        return {data: 'Ups, ha habido un problema, reintenta más tarde', status: 500}
+    }
 }
