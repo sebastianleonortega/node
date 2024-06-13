@@ -5,7 +5,7 @@ import {authValidator} from "../validators/auth.validators.js";
 
 const routerAuth = Router();
 
-routerAuth.get("/", validate(authValidator), login);
-routerAuth.get("/register", validate(authValidator), register);
+routerAuth.post("/", validate(authValidator), login);
+routerAuth.post("/register", validate(authValidator), register);
 
 export default routerAuth;

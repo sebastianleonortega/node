@@ -20,9 +20,11 @@ Este software te permite gestionar productos a través de operaciones CRUD (Crea
    * cd <Nombre-proyecto>
    * npm install
 3. Configura la base de datos PostgreSQL.
-   - Crea una base de datos PostgreSQL
+   - Crea una base de datos PostgreSQL.
    - Actualiza las variables de entorno del archivo `.env` con la información de tu base de datos PostgreSQL.
+   - para crear las tablas y poblarlas, ir a la carpeta `scrips` y al archivo `_updateSQL`
    
+
 4. Instala e Inicia el servidor:
    ```bash
    * npm i -g nodemon
@@ -31,8 +33,8 @@ Este software te permite gestionar productos a través de operaciones CRUD (Crea
 ## Uso
 
 1. **Registro e inicio de sesión**:
-   - Regístrate en el sistema para obtener una cuenta `http://localhost:<puerto-donde-corriste-el-software>/auth/register`.
-   - Inicia sesión con tus credenciales `<puerto-donde-corriste-el-software>`, despues de iniciado sesion el sistema te devolvera un jwt que es necesario para el CRUD de producto
+   - Regístrate en el sistema para obtener una cuenta `http://localhost:3100/auth/register`.
+   - Inicia sesión con tus credenciales `http://localhost:3100/auth/`, despues de iniciado sesion el sistema te devolvera un jwt que es necesario para el CRUD de producto
 
 2. **Operaciones CRUD DE PRODUCTO**:
    - **Crear**: Agrega nuevos productos `http://localhost:3100/product/`.
